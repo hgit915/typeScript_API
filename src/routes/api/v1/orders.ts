@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import * as OrderController from '@/controllers/order';
+import * as VerifyController from '@/controllers/verify'
 import { checkOrder, isAuth } from '@/middlewares';
+import { checkRequestBodyValidator } from '@/middlewares';
 
 const router = Router();
 
@@ -92,6 +94,34 @@ router.delete(
      */
     '/:id',
     OrderController.deleteOrderByUser
+);
+
+router.post(
+   /**
+     * #swagger.description  = "發送訂單成功信"
+     * #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                email: "test@example.com",
+                name: "Ginny"
+            }
+        }
+     * #swagger.responses[200] = {
+            schema: {
+                "status": true,
+            }
+        }
+     * #swagger.responses[400] = {
+            schema: {
+                "status": false,
+                "message": "Email 格式不正確",
+            }
+        }
+     */
+    '/sendOrderEmail',
+    checkRequestBodyValidator,
+    VerifyController.sendOrderEmail
 );
 
 export default router;
